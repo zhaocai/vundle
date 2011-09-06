@@ -6,9 +6,13 @@ func! vundle#config#bundle(arg, ...)
 endf
 
 func! vundle#config#init()
-  if !exists('g:bundles') | let g:bundles = [] | endif
-  call s:rtp_rm_a()
-  let g:bundles = []
+	if !exists('g:bundles') | let g:bundles = [] | endif
+	call s:rtp_rm_a()
+	let g:bundles = []
+	if !exists('g:vundle_winwidth')
+		let g:vundle_winwidth = 36
+	endif
+
 endf
 
 func! vundle#config#require(bundles) abort

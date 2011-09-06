@@ -30,10 +30,10 @@ func! s:view_log()
   call writefile(g:vundle_log, g:vundle_log_file)
   silent pedit `=g:vundle_log_file`
 
-  wincmd P | wincmd H
+  wincmd P | wincmd H 
 endf
 
-func vundle#scripts#bundle_names(names)
+func! vundle#scripts#bundle_names(names)
   return map(copy(a:names), ' printf("Bundle ' ."'%s'".'", v:val) ')
 endf
 
@@ -44,9 +44,14 @@ func! vundle#scripts#view(title, headers, results)
 
   exec 'silent pedit [Vundle] '.a:title
 
-  wincmd P | wincmd H
+  wincmd P | wincmd H 
 
+  if winwidth(0) > g:vundle_winwidth
+	  exec "vert resize". g:vundle_winwidth
+  endif
   let g:vundle_view = bufnr('%')
+
+  setl modifiable noreadonly
 
   call append(0, a:headers + a:results)
 

@@ -34,7 +34,6 @@ sign define Vu_updated  text=+  texthl=Comment
 sign define Vu_deleted  text=-  texthl=Comment
 endif
 
-
 func! vundle#rc(...) abort
   let g:bundle_dir = len(a:000) > 0 ? expand(a:1) : expand('$HOME/.vim/bundle')
   let g:vundle_log = []
