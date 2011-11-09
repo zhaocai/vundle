@@ -50,6 +50,10 @@ func! vundle#scripts#view(title, headers, results)
 	  exec "vert resize". g:vundle_winwidth
   endif
   let g:vundle_view = bufnr('%')
+  "
+  " make buffer modifiable 
+  " to append without errors
+  set modifiable
 
   setl modifiable noreadonly
 
@@ -98,7 +102,7 @@ func! vundle#scripts#view(title, headers, results)
   nnoremap <buffer> c :BundleClean<CR>
   nnoremap <buffer> C :BundleClean!<CR>
 
-  nnoremap <buffer> s :BundleSearch
+  nnoremap <buffer> s :BundleSearch 
   nnoremap <buffer> R :call vundle#scripts#reload()<CR>
 
   " goto first line after headers
