@@ -53,8 +53,6 @@ func! vundle#scripts#view(title, headers, results)
   "
   " make buffer modifiable 
   " to append without errors
-  set modifiable
-
   setl modifiable noreadonly
 
   call append(0, a:headers + a:results)
