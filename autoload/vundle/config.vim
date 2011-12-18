@@ -13,7 +13,7 @@ endf
 
 func! vundle#config#require(bundles) abort
   for b in a:bundles
-    call s:rtp_add(b.rtpath())
+    call s:rtp_add(b.rtpath)
     call s:rtp_add(g:bundle_dir)
     " TODO: it has to be relative rtpath, not bundle.name
     exec 'runtime! '.b.name.'/plugin/*.vim'
@@ -24,7 +24,9 @@ endf
 
 func! vundle#config#init_bundle(name, opts)
   let opts = extend(s:parse_options(a:opts), s:parse_name(substitute(a:name,"['".'"]\+','','g')))
-  return extend(opts, copy(s:bundle))
+  let b = extend(opts, copy(s:bundle))
+  let b.rtpath = s:rtpath(opts)
+  return b
 endf
 
 func! s:parse_options(opts)
@@ -61,19 +63,19 @@ func! s:parse_name(arg)
 endf
 
 func! s:rtp_rm_a()
-  let paths = map(copy(g:bundles), 'fnameescape(expand(v:val.rtpath(), 1))')
+  let paths = map(copy(g:bundles), 'v:val.rtpath')
   let prepends = join(paths, ',')
   let appends = join(paths, '/after,').'/after'
-  exec 'set rtp-='.prepends
-  exec 'set rtp-='.appends
+  exec 'set rtp-='.fnameescape(prepends)
+  exec 'set rtp-='.fnameescape(appends)
 endf
 
 func! s:rtp_add_a()
-  let paths = map(copy(g:bundles), 'fnameescape(expand(v:val.rtpath(), 1))')
+  let paths = map(copy(g:bundles), 'v:val.rtpath')
   let prepends = join(paths, ',')
   let appends = join(paths, '/after,').'/after'
-  exec 'set rtp^='.prepends
-  exec 'set rtp+='.appends
+  exec 'set rtp^='.fnameescape(prepends)
+  exec 'set rtp+='.fnameescape(appends)
 endf
 
 func! s:rtp_rm(dir) abort
@@ -90,18 +92,13 @@ func! s:expand_path(path) abort
   return simplify(expand(a:path, 1))
 endf
 
+func! s:rtpath(opts)
+  return has_key(a:opts, 'rtp') ? s:expand_path(a:opts.path().'/'.a:opts.rtp) : a:opts.path()
+endf
+
 let s:bundle = {}
 
 func! s:bundle.path()
   return s:expand_path(g:bundle_dir.'/'.self.name)
 endf
 
-func! s:bundle.rtpath()
-  " return cached if available
-  if has_key(self,'_rtpath')
-    return self._rtpath
-  end
-
-  let self._rtpath = has_key(self, 'rtp') ? s:expand_path(self.path().'/'.self.rtp) : self.path()
-  return self._rtpath
-endf
