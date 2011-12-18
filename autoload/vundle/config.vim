@@ -97,5 +97,11 @@ func! s:bundle.path()
 endf
 
 func! s:bundle.rtpath()
-  return has_key(self, 'rtp') ? s:expand_path(self.path().'/'.self.rtp) : self.path()
+  " return cached if available
+  if has_key(self,'_rtpath')
+    return self._rtpath
+  end
+
+  let self._rtpath = has_key(self, 'rtp') ? s:expand_path(self.path().'/'.self.rtp) : self.path()
+  return self._rtpath
 endf
